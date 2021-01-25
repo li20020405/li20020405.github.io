@@ -1,0 +1,608 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h> 
+#include <math.h>
+struct library
+{
+	int id;
+	char name[30];
+	char author[30];
+	int money;
+	int store;
+	char publish[20];
+ } book[500];
+ struct accounter
+ {
+ 	char num[20];
+ 	char password[20];
+ 	char nickname[20];
+	 int ident;
+ }hao[100];
+
+int ttt=0;//图书数量 
+int qqq=0;// 用户数量 
+
+void bookread();//读入图书信息 
+void readuser();//读入用户信息 
+void mainmenu();
+void bookmenu();
+void usermenu();
+void registmenu();
+void saveuser();   //存入用户账户 
+void booksave();  //存入图书信息 
+void regist();   //注册用户 
+void signin();  //登录账号
+int judge(char *a,char *b);  //判断账号密码 
+void bookadd();  //添加图书 
+void bookshow();//展示图书 
+void bookdel();//删除图书 
+void bookborrow();//借阅图书 
+void bookback();//归还图书 
+void bookedit();//编辑图书信息 
+void bookfind();//查找图书 
+ void wordchange();//修改密码 
+
+void registmenu()   //注册页面 
+{
+	system("cls");
+	printf("\t\t         **********************************************************\n");
+	printf("\t\t         *                     图书管理系统                       *\n");
+	printf("\t\t         *                                                        *\n");
+	printf("\t\t         *                   您可以进行以下操作                   *\n");
+	printf("\t\t         *                                                        *\n");
+	printf("\t\t         *                注册用户账号请按:    1                  *\n");
+	printf("\t\t         *                                                        *\n");
+	printf("\t\t         *                   登录账号请按:     2                  *\n");
+	printf("\t\t         *                                                        *\n");
+	printf("\t\t         *                退出界面请按:        3                  *\n");
+	printf("\t\t         *                                                        *\n");
+	printf("\t\t         *                                                        *\n");
+	printf("\t\t         **********************************************************");
+		 int i; 
+	scanf("%d",&i) ;
+	switch(i)
+	{
+	case 1:	regist();break;
+	case 2:	signin();break;
+	default: return;	
+	}
+}
+
+void mainmenu()   //打印主页面 
+{
+	system("cls");
+	printf("\t         **********************************************************\n");
+	printf("\t         *                     图书管理系统                       *\n");
+	printf("\t         *                                                        *\n");
+	printf("\t         *                   您可以进行以下操作                   *\n");
+	printf("\t         *                                                        *\n");
+	printf("\t         *                用户界面请按:    1                      *\n");
+	printf("\t         *                                                        *\n");
+	printf("\t         *    (仅管理员身份)图书界面请按:     2                   *\n");
+	printf("\t         *                                                        *\n");
+	printf("\t         *                退出界面请按:    3                      *\n");
+	printf("\t         *                                                        *\n");
+	printf("\t         *                                                        *\n");
+	printf("\t         **********************************************************");
+		 int i; 
+	scanf("%d",&i) ;
+	switch(i)
+	{
+	case 1:	usermenu();break;
+	case 2:	bookmenu();break;
+	default :return;	
+	}
+}
+
+void bookmenu()
+{
+	system("cls");
+	printf("\t         ****************************************************************\n");
+	printf("\t         *                                                              *\n");
+	printf("\t         *                         您可以进行以下操作                   *\n");
+ 	printf("\t         *                                                              *\n");
+	printf("\t         *                      添加图书请按:     1                     *\n");
+	printf("\t         *                                                              *\n");
+	printf("\t         *                      删除图书请按:     2                     *\n");
+	printf("\t         *                                                              *\n");
+	printf("\t         *                  修改图书信息请按:     3                     *\n");
+	printf("\t         *                                                              *\n");
+	printf("\t         *                返回上一级菜单请按:     4                     *\n");
+	printf("\t         *                                                              *\n");
+	printf("\t         ****************************************************************");
+	 int i; 
+	scanf("%d",&i);
+	switch(i)
+	{
+	case 1:	bookadd();break;
+	case 2:	bookdel();break;
+	case 3:	bookedit();break;
+	case 4:	mainmenu();break;
+	default: return;	
+	}
+}
+
+void usermenu()
+{
+	system("cls");
+	printf("\t         ****************************************************************\n");
+	printf("\t         *                                                              *\n");
+	printf("\t         *                         您可以进行以下操作                   *\n");
+ 	printf("\t         *                                                              *\n");
+	printf("\t         *                      查找图书请按:     1                     *\n");
+	printf("\t         *                                                              *\n");
+	printf("\t         *                      浏览图书请按:     2                     *\n");
+	printf("\t         *                                                              *\n");
+	printf("\t         *                      借阅图书请按:     3                     *\n");
+	printf("\t         *                                                              *\n");
+	printf("\t         *                      归还图书请按:     4                     *\n");
+	printf("\t         *                                                              *\n");
+	printf("\t         *                      修改密码请按:     5                     *\n");
+	printf("\t         *                                                              *\n");
+	printf("\t         *                返回上一级菜单请按:     6                     *\n");
+	printf("\t         *                                                              *\n");
+	printf("\t         ****************************************************************");
+	int num;
+	scanf("%d",&num);
+	switch(num)
+	{
+		case 1: bookfind();break;
+		case 2: bookshow();break;
+		case 3: bookborrow(); break;
+		case 4: bookback();break;
+		case 5: wordchange();break;	
+		case 6: mainmenu();break;
+		default: return;
+		
+	}
+	
+} 
+
+void saveuser()   //存入用户账户 
+{
+	FILE *fp;
+	fp=fopen("E://图书馆用户账户.txt","w");
+	for(int i=0;i<qqq;i++)
+	{
+		fprintf(fp, "账号%s\n", hao[i].num);
+		fprintf(fp, "密码%s\n", hao[i].password);
+		fprintf(fp, "名字%s\n", hao[i].nickname);
+		fprintf(fp, "身份%d\n", hao[i].ident);
+	}
+	fclose(fp);
+}
+
+void booksave()  //存入图书信息 
+{
+	FILE *fp;
+	fp=fopen("E://图书信息.txt","w");
+	for(int i=0;i<ttt;i++)
+	{
+		fprintf(fp, "序号%d\n", book[i].id);
+		fprintf(fp, "书名%s\n", book[i].name);
+		fprintf(fp, "作者%s\n", book[i].author);
+		fprintf(fp, "出版社%s\n", book[i].publish);
+		fprintf(fp, "库存%d\n", book[i].store);
+		fprintf(fp, "价格%d\n", book[i].money);
+	}
+}
+
+void bookread()
+{
+	FILE* fp;
+	fp = fopen("E://图书信息.txt", "r");
+	char ch;
+	while (ch = fgetc(fp), ch != EOF) {
+		fseek(fp, -1, SEEK_CUR);
+		fscanf(fp, "%d\n", book[ttt].id);
+		fscanf(fp, "%s\n", book[ttt].name);
+		fscanf(fp, "%s\n", book[ttt].author);
+		fscanf(fp, "%s\n", book[ttt].publish);
+		fscanf(fp, "%d\n", book[ttt].store);
+		fscanf(fp, "%d\n", book[ttt].money);
+		ttt++;
+		fgetc(fp);
+	}
+	fclose(fp);
+}
+
+void readuser()
+	{
+		FILE* fp;
+		fp = fopen("E://图书馆用户账户.txt", "r");
+		char ch;
+		while (ch = fgetc(fp), ch != EOF) {
+			fseek(fp, -1, SEEK_CUR);
+		fscanf(fp, "%s\n", hao[qqq].num);
+		fscanf(fp, "%s\n", hao[qqq].password);
+		fscanf(fp, "%s\n", hao[qqq].nickname);
+		fscanf(fp, "%d\n", hao[qqq].ident);
+			qqq++;
+			fgetc(fp);
+		}
+		fclose(fp);
+	}
+
+void regist()   //注册用户 
+{
+system("cls");
+	char a[15], b[15], c[15], d[15];
+	int t;
+	while (1) {
+		printf("设置账号\n");
+		scanf("%s", &a);
+		printf("设置密码\n");
+		scanf("%s", &b);
+		printf("重复密码\n"); 
+		scanf("%s", &c);
+		if (strcmp(b, c) != 0)
+		{
+			printf("两次输入密码不一致，请重新注册!\n");
+		}
+		else
+		{
+			printf("请输入用户名(由15位以内数字和英文字母组成)\n");
+			scanf("%s", &d);
+			strcpy(hao[qqq].num, a); 
+			strcpy(hao[qqq].password, c);
+			strcpy(hao[qqq].nickname, d);
+			printf("是否要成为管理员?\n输入1或0\n");
+			scanf("%d",&t); 
+			if(t==1)
+			{
+			printf("亲爱的管理员您已注册成功~\n");
+			hao[qqq].ident = 1;
+			} 
+			else
+				{
+			printf("亲爱的用户您已注册成功~\n");		
+			hao[qqq].ident = 0;
+			 	 } 
+			qqq++;
+			saveuser();
+			break;
+	}
+	}
+	system("PAUSE");
+	registmenu();
+}
+
+void signin()  //登录账号 
+{
+	system("cls");	
+		char a[15], b[15];
+		printf("请输入账号\n");
+		scanf("%s", a);
+		printf("请输入密码\n");
+		scanf("%s", b);
+		for(int i=0;i<qqq;i++)
+	{
+		if(strcmp(a,hao[i].num)==0)
+		break;
+	}
+	if (judge(a, b))
+		{
+			printf("登录成功\n");
+			system("PAUSE");
+			mainmenu();
+		}
+		else
+		{
+			printf("账号或密码错误，请重新输入或未注册账户\n");
+		}
+	system("PAUSE");
+	registmenu();
+} 
+
+int judge(char *a,char *b)  //判断账号密码 
+{
+	int i;
+	for( i=0;i<qqq;i++)
+	{
+		if(strcmp(a,hao[i].num)==0)
+		break;
+	}
+	if(strcmp(b,hao[i].password)==0) return 1;
+	else return 0;
+ } 
+ 
+ void wordchange()
+ {
+ 	int i;
+ 	char a[20],b[20],c[20],d[20];
+ 	printf("输入要改密的账号: \n") ;
+	scanf("%s",&a);
+ 	printf("输入原来的密码:\n"); 
+ 	scanf("%s",&b);
+ 	for(i=0;i<qqq;i++)
+ 	{
+ 		if(strcmp(a,hao[i].num)==0)
+ 		break;
+	 }
+	 while(1)
+	 {
+			if(strcmp(b,hao[i].password)==0)
+		{
+		printf("输入新密码: \n");
+		scanf("%s",&c);
+		if(strcmp(b,c)==0)
+		{
+		printf("原密码与新密码相同,请重新输入!");
+		continue;
+		}
+		printf("再次输入新密码: \n");
+		scanf("%s",&d);
+		}
+		if(strcmp(c,d)==0) 
+		{
+			strcpy(hao[i].password,c);
+			saveuser();
+			printf("密码修改成功!\n");
+			break; 
+		}
+		else 
+		{
+			printf("两次密码输入不相同!\n") ; 
+			continue; 
+		}
+ 	 }
+ 	 
+ }
+
+void bookadd()  //添加图书 
+{
+	system("cls");
+	printf("注册新书:\n");
+	while(1) 
+	{
+	printf("输入序号:   ");
+	scanf("%d",&book[ttt].id);
+	printf("输入书名:   ");
+	scanf("%s",&book[ttt].name);
+	printf("输入作者:   ");
+	scanf("%s",&book[ttt].author);
+	printf("输入出版社:   ");
+	scanf("%s",&book[ttt].publish);
+	printf("输入价钱:   ");
+	scanf("%d",&book[ttt].money);
+	printf("输入库存:   ");
+	scanf("%d",&book[ttt].store);
+	ttt++;
+	booksave(); 
+	printf("是否继续注册?\n");
+	printf("继续请按:1\n"); 
+	printf("退出请按:2\n");
+	int i;
+	scanf("%d",&i);
+	if(i==1) continue; 
+	else 
+	{
+	break;	
+	}
+	}
+	system("PAUSE");
+	bookmenu();	
+ } 
+
+void bookfind()
+{
+	system("cls");
+	printf("请选择查找的方式:\n");
+	printf("按序号查找请按:    1\n"); 
+	printf("按书名查找请按:    2\n");
+	printf("按作者查找请按:    3\n");
+	int a,i,j,tag=0;
+	char sss[30];
+	scanf("%d",&a); 
+	switch(a)
+	{
+		case 1:
+			{
+				printf("序号: "); 
+				scanf("%d",&j);
+				for(i=0;i<500;i++)
+				{
+				if(j==book[i].id)	
+					{
+						printf("序号:%d\n",book[i].id);
+						printf("姓名:%s\n",book[i].name);
+						printf("作者:%s\n",book[i].author);
+						printf("出版社:%s\n",book[i].publish);
+						printf("价格:%d\n",book[i].money);
+						printf("库存:%d\n",book[i].store);
+						tag=1;
+					}
+					break;		
+				}
+				if(tag==0) printf("没有找到相关书籍\n");
+			}
+		case 2:
+			{
+				printf("书名: "); 
+				scanf("%s",&sss);
+				for(i=0;i<500;i++)
+				{
+				if(strcmp(sss,book[i].name)==0)
+					{
+						printf("序号:%d\n",book[i].id);
+						printf("姓名:%s\n",book[i].name);
+						printf("作者:%s\n",book[i].author);
+						printf("出版社:%s\n",book[i].publish);
+						printf("价格:%d\n",book[i].money);
+						printf("库存:%d\n",book[i].store);
+						tag=1;
+					}
+					break;		
+				}
+				if(tag==0) printf("没有找到相关书籍\n");		
+			}
+		case 3:
+			{
+				printf("作者: "); 
+				scanf("%s",&sss);
+				for(i=0;i<500;i++)
+				{
+				if(strcmp(sss,book[i].author)==0)
+					{
+						printf("序号:%d\n",book[i].id);
+						printf("姓名:%s\n",book[i].name);
+						printf("作者:%s\n",book[i].author);
+						printf("出版社:%s\n",book[i].publish);
+						printf("价格:%d\n",book[i].money);
+						printf("库存:%d\n",book[i].store);
+						tag=1;
+					}		
+				}
+				if(tag==0) printf("没有找到相关书籍\n");		
+			}
+	}
+	system("PAUSE");
+	usermenu();	
+}
+
+void bookshow()
+{
+	system("cls");
+	printf("以下为本图书馆所有图书:\n");
+	   			for(int i=0;i<ttt;i++)
+					{
+						printf("序号:%d\n",book[i].id);
+						printf("姓名:%s\n",book[i].name);
+						printf("作者:%s\n",book[i].author);
+						printf("出版社:%s\n",book[i].publish);
+						printf("价格:%d\n",book[i].money);
+						printf("库存:%d\n",book[i].store);
+						printf("                        \n");
+					}
+	system("PAUSE");
+	usermenu();	
+
+}
+
+void bookdel()
+{
+	system("cls");
+	int a,i,j;
+	printf("输入所要删除的书的id：");
+	scanf("%d",&a);
+	for(i=0;i<ttt;i++)
+	{
+		if(a==book[i].id)
+		{
+		for(j=i;j<ttt;j++)	
+		{
+			book[j].id=book[j+1].id;
+			book[j].money=book[j+1].money;
+			book[j].store=book[j+1].store;
+			strcpy(book[j].name,book[j+1].name);
+			strcpy(book[j].author,book[j+1].author);
+			strcpy(book[j].publish,book[j+1].publish);
+		}
+		booksave();
+		printf("该书已经删除了!!!\n");	
+		}
+		else printf("未找到相关记录\n");
+	}
+	system("PAUSE");
+	usermenu();	
+}
+
+void bookborrow()
+{
+	system("cls");
+	char sss[20]; 
+	int a;
+	printf("输入书名: "); 
+	scanf("%s",&sss);
+	printf("借阅天数: ");
+	scanf("%d",&a); 
+	for(int i=0;i<100;i++)
+	{
+		if(strcmp(sss,book[i].name)==0)
+		{
+			if(book[i].store==0)
+			{
+				printf("此书库存已空!\n"); 	
+				break;	
+			}
+			else
+			{
+			 book[i].store--;
+			 printf("借阅成功!\n");
+			 printf("借阅天数:%d    借阅书名:%s",a,book[i].name);
+			 break; 
+			}
+		} 
+	}
+	system("PAUSE");
+	usermenu();	
+	
+}
+
+void bookback()
+{
+	system("cls");
+	char sss[20];
+	printf("输入书名: "); 
+	scanf("%s",&sss);
+	for(int i=0;i<ttt;i++)
+	{
+		if(strcmp(sss,book[i].name)==0)
+		{
+			book[i].store++;
+			printf("归还成功!\n");
+			break;
+		}
+		else 
+		{
+		printf("您未借阅此书!"); 
+		continue;
+		}
+	}
+	system("PAUSE");
+	usermenu();	
+}
+
+void bookedit()
+{
+	system("cls");
+	char str[20]; 
+	int tag,i;
+	printf("输入书名: "); 
+	scanf("%s",&str);
+	for(i=0;i<ttt;i++)
+	{
+		if(strcmp(str,book[i].name)==0)
+		{	
+		break;
+	    }
+	}
+	printf("请输入新的序号：\n");
+	scanf("%d", &tag);
+	book[i].id=tag;
+	printf("请输入新的书名：\n");
+	scanf("%s",&str);
+	strcpy(book[i].name, str);
+	printf("请输入新的作者：\n");
+	scanf("%s", &str);
+	strcpy(book[i].author, str);
+	printf("请输入新的出版社：\n");
+	scanf("%s", &str);
+	strcpy(book[i].publish, str);
+	printf("请输入新的价格：\n");
+	scanf("%d", &tag);
+	book[i].money=tag;
+	printf("请输入新的库存：\n");
+	scanf("%d", &tag);
+	book[i].store=tag;	
+	booksave();
+	system("PAUSE");
+	bookmenu();		
+}	
+int main(void) 
+{
+	void bookread();
+	void readuser(); 
+	registmenu();
+}
+
